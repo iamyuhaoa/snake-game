@@ -46,7 +46,7 @@ class GameState:
         Returns:
             A new GameState with default snake and random food.
         """
-        snake = Snake.create_default()
+        snake = Snake.create_default(width, height)
         food = Food.spawn_random(width, height, forbidden=snake.body)
         return cls(
             snake=snake,

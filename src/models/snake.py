@@ -33,16 +33,24 @@ class Snake:
         return set(self.body)
 
     @classmethod
-    def create_default(cls) -> "Snake":
+    def create_default(cls, width: int = 20, height: int = 20) -> "Snake":
         """Create a default snake with 3 horizontal segments.
+
+        Args:
+            width: Grid width for positioning (default 20).
+            height: Grid height for positioning (default 20).
 
         Returns:
             A new Snake instance with default configuration.
         """
+        # Position snake in the left-center of the grid
+        start_y = height // 2
+        start_x = width // 4
+
         body = (
-            Position(x=5, y=10),
-            Position(x=4, y=10),
-            Position(x=3, y=10),
+            Position(x=start_x, y=start_y),
+            Position(x=start_x - 1, y=start_y),
+            Position(x=start_x - 2, y=start_y),
         )
         return cls(body=body, direction=Direction.RIGHT)
 
@@ -66,6 +74,16 @@ class Snake:
         if not grow:
             new_body = new_body[:-1]
 
+        return self.__class__(body=new_body, direction=self.direction)
+
+    def grow(self) -> "Snake":
+        """Grow the snake by adding a segment at the tail.
+
+        Returns:
+            A new Snake with an additional tail segment.
+        """
+        # Duplicate the tail segment to make the snake longer
+        new_body = self.body + (self.body[-1],)
         return self.__class__(body=new_body, direction=self.direction)
 
     def change_direction(self, new_direction: Direction) -> "Snake":

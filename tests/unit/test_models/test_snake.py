@@ -56,6 +56,19 @@ class TestSnakeMovement:
         # Old tail position is removed
         assert Position(x=3, y=10) not in new_snake.body
 
+    def test_grow_increases_length(self):
+        """Test growing the snake increases length by 1."""
+        body = (Position(x=5, y=10), Position(x=4, y=10), Position(x=3, y=10))
+        snake = Snake(body=body, direction=Direction.RIGHT)
+
+        grown_snake = snake.grow()
+
+        assert len(grown_snake) == len(snake) + 1
+        # New segment is a duplicate of the old tail
+        assert grown_snake.body[-1] == Position(x=3, y=10)
+        # Tail segment appears twice at the end
+        assert grown_snake.body[-2] == Position(x=3, y=10)
+
     def test_move_forward_with_eating(self):
         """Test moving forward while eating (tail preserved)."""
         body = (Position(x=5, y=10), Position(x=4, y=10), Position(x=3, y=10))

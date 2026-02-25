@@ -69,18 +69,9 @@ class GameLoop:
         )
 
         if eats_food:
-            # Snake ate food - increase score and respawn food
-            # Note: move_snake was called with grow=False, so we need to add the tail back
-            # and increase the score. Let's create a new state with the grown snake
-            from src.models.snake import Snake
-
-            # Reconstruct the snake with growth (add tail segment back)
-            old_tail = self.state.snake.body[-1]
-            new_body = self.state.snake.body + (old_tail,)
-            grown_snake = Snake(body=new_body, direction=self.state.snake.direction)
-
+            # Snake ate food - grow snake, increase score, and respawn food
             self.state = self.state.__class__(
-                snake=grown_snake,
+                snake=self.state.snake.grow(),
                 food=self.state.food,
                 score=self.state.score + 10,
                 status=self.state.status,
