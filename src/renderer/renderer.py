@@ -63,25 +63,83 @@ class Renderer:
             pass
 
     def _draw_snake(self, snake) -> None:
-        """Draw the snake.
+        """Draw the snake as connected triangles.
 
         Args:
             snake: The snake to draw.
         """
+        # First draw connecting lines (so they appear behind triangles)
+        self._draw_snake_connections(snake)
+
+        # Then draw triangle segments on top
         for i, segment in enumerate(snake.body):
-            x, y, width, height = self._cell_to_rect(segment)
-
-            # Head uses different color
             color = self.colors.SNAKE_HEAD if i == 0 else self.colors.SNAKE_BODY
+            self._draw_triangle_segment(segment, color)
 
-            # Draw segment with border
-            pygame.draw.rect(self.screen, color, (x, y, width, height))
-            pygame.draw.rect(
+    def _draw_triangle_segment(self, position, color) -> None:
+        """Draw a single triangle segment.
+
+        Args:
+            position: Grid position of the segment.
+            color: Triangle fill color.
+        """
+        x, y, width, height = self._cell_to_rect(position)
+
+        padding = 4  # Space between triangle and cell boundary
+
+        # Calculate triangle vertices (isosceles triangle pointing up)
+        top = (x + width // 2, y + padding)
+        left_bottom = (x + padding, y + height - padding)
+        right_bottom = (x + width - padding, y + height - padding)
+
+        # Draw filled triangle
+        pygame.draw.polygon(self.screen, color, [top, left_bottom, right_bottom])
+
+        # Draw triangle border
+        pygame.draw.polygon(
+            self.screen,
+            self.colors.SNAKE_BORDER,
+            [top, left_bottom, right_bottom],
+            2  # Border width
+        )
+
+    def _draw_snake_connections(self, snake) -> None:
+        """Draw connecting lines between snake segments.
+
+        Args:
+            snake: The snake whose connections to draw.
+        """
+        if len(snake.body) < 2:
+            return
+
+        for i in range(len(snake.body) - 1):
+            current_pos = snake.body[i]
+            next_pos = snake.body[i + 1]
+
+            # Calculate center points of both triangles
+            center1 = self._get_triangle_center(current_pos)
+            center2 = self._get_triangle_center(next_pos)
+
+            # Draw connecting line
+            pygame.draw.line(
                 self.screen,
                 self.colors.SNAKE_BORDER,
-                (x, y, width, height),
-                2  # Border width
+                center1,
+                center2,
+                3  # Line width
             )
+
+    def _get_triangle_center(self, position) -> Tuple[int, int]:
+        """Calculate the center point of a triangle at this position.
+
+        Args:
+            position: Grid position.
+
+        Returns:
+            Tuple of (x, y) center coordinates in pixels.
+        """
+        x, y, width, height = self._cell_to_rect(position)
+        return (x + width // 2, y + height // 2)
 
     def _draw_food(self, food) -> None:
         """Draw the food.

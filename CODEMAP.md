@@ -46,8 +46,10 @@
 | **蛇的颜色** | `src/config/colors.py` | `SNAKE_HEAD/BODY` | 23-25 |
 | **食物颜色** | `src/config/colors.py` | `FOOD` | 27 |
 | **背景颜色** | `src/config/colors.py` | `BACKGROUND` | 20 |
-| **渲染蛇** | `src/renderer/renderer.py` | `_draw_snake()` | 62-77 |
-| **渲染食物** | `src/renderer/renderer.py` | `_draw_food()` | 79-99 |
+| **渲染蛇（三角形）** | `src/renderer/renderer.py` | `_draw_snake()` | 65-77 |
+| **绘制三角形段** | `src/renderer/renderer.py` | `_draw_triangle_segment()` | 79-104 |
+| **绘制连接线** | `src/renderer/renderer.py` | `_draw_snake_connections()` | 106-130 |
+| **渲染食物** | `src/renderer/renderer.py` | `_draw_food()` | 144-162 |
 | **显示分数** | `src/renderer/renderer.py` | `_draw_score()` | 101-110 |
 | **显示游戏结束** | `src/renderer/renderer.py` | `render()` | 52-58 |
 
@@ -162,13 +164,17 @@ GameLoop.run()             # 主循环
 
 #### `renderer.py` - 渲染器
 ```python
-Renderer.render()           # 主渲染方法
-Renderer._draw_snake()      # 绘制蛇
-Renderer._draw_food()       # 绘制食物
-Renderer._draw_score()      # 绘制分数
-Renderer._draw_text_centered() # 绘制文本
+Renderer.render()                  # 主渲染方法
+Renderer._draw_snake()             # 绘制蛇（三角形+连接线）
+Renderer._draw_triangle_segment()  # 绘制单个三角形段
+Renderer._draw_snake_connections() # 绘制三角形间的连接线
+Renderer._get_triangle_center()    # 计算三角形中心点
+Renderer._draw_food()              # 绘制食物
+Renderer._draw_score()             # 绘制分数
+Renderer._draw_text_centered()     # 绘制文本
+Renderer._cell_to_rect()           # 网格坐标转像素
 ```
-**修改场景**: 改变视觉效果、添加动画
+**修改场景**: 改变视觉效果、添加动画、修改蛇的形状
 
 ### 配置层 (`src/config/`)
 
